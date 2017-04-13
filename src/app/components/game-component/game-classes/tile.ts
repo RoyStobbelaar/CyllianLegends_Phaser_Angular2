@@ -2,6 +2,7 @@ import { GameComponent } from './../game.component';
 import { GameEntity } from './game-entity';
 import { Vector2 } from './vector2';
 import { TileMap } from './tileMap';
+import { Rectangle } from './rectangle';
 
 export class Tile extends GameEntity{
 
@@ -15,6 +16,7 @@ export class Tile extends GameEntity{
         vFrame: number
          ) {
         super(game, pos, path, width, height, hFrame, vFrame);
+        this.BoundingBox = new Rectangle(pos.x,pos.y,width,height);
     }
 
     public draw(ctx:CanvasRenderingContext2D, collision?:boolean){

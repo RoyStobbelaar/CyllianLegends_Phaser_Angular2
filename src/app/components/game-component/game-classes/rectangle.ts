@@ -2,23 +2,27 @@ import { Vector2 } from './vector2';
 
 export class Rectangle{
     
-    private x:number;
-    private y:number;
-    private width:number;
-    private height:number;
+    public x:number;
+    public y:number;
+    public width:number;
+    public height:number;
 
-    private top:number;
-    private bottom:number;
-    private left:number;
-    private right:number;
+    public top:number;
+    public bottom:number;
+    public left:number;
+    public right:number;
 
     constructor(positionX: number, positionY:number, width:number, height:number){
         this.x = positionX;
         this.y = positionY;
-        this.width=width;
-        this.height=height;
+        this.width = width;
+        this.height = height;
 
         //Fill top, bottom, left, right
+        this.top = positionY;
+        this.bottom = positionY+height;
+        this.left = positionX;
+        this.right = positionX + width;
     }
 
     TouchesCameraBorders(position: Vector2){
@@ -31,10 +35,11 @@ export class Rectangle{
     }
 
     static Intersect(r1: Rectangle, r2: Rectangle){
-        return (r2.x < r1.width &&
-                r2.x < r1.x &&
-                r2.y < r1.height &&
-                r2.height < r1.y
+
+        return (r1.left < r2.right &&
+                r2.left < r1.right &&
+                r1.top < r2.bottom &&
+                r2.top < r1.bottom
                 );
     }
 }

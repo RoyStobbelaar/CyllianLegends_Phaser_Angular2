@@ -11,8 +11,10 @@ export class GameCharacter extends GameEntity {
     public direction: Direction;
     public velocity: Vector2;
     public prevPosition: Vector2;
+    public prevDirection: Direction;
     public timer: number = 0;
     public playerCameraPosition: Vector2;
+    public collision: boolean;
 
     constructor(
         game: GameComponent,
@@ -28,11 +30,15 @@ export class GameCharacter extends GameEntity {
         this.direction = Direction.Down;
         this.velocity = new Vector2(0, 0);
         this.playerCameraPosition = new Vector2(this.position.x - this.game.camera.x, this.position.y - this.game.camera.y);
+        this.collision = false;
     }
 
-    public collisionWithCollisionTile(tile: GameEntity){
+    public collisionWithCollisionTile(tile: GameEntity) {
         //Collision with tile, return to previous location
-        this.position = this.prevPosition;
+        //this.position = this.prevPosition;
+        console.log('collide');
+        this.collision = true;
+        this.prevDirection = this.direction;
     }
 
     public update() {
@@ -41,30 +47,44 @@ export class GameCharacter extends GameEntity {
         this.velocity.x = 0;
         this.velocity.y = 0;
 
-        if (this.game.keysDown[37]) {
+        if (this.game.keysDown[37] || this.game.keysDown[65]) {
             this.velocity.x -= 3;
             this.verticalFrame = 1;
+            this.direction = Direction.Left;
         }
-        if (this.game.keysDown[38]) {
-            this.velocity.y -= 3;
+        if (this.game.keysDown[38] || this.game.keysDown[87]) {
+            this.velocity.y -= 3; 0
             this.verticalFrame = 3;
+            this.direction = Direction.Up;
+
         }
-        if (this.game.keysDown[39]) {
+        if (this.game.keysDown[39] || this.game.keysDown[68]) {
             this.velocity.x += 3;
             this.verticalFrame = 2;
+            this.direction = Direction.Right;
+
         }
-        if (this.game.keysDown[40]) {
+        if (this.game.keysDown[40] || this.game.keysDown[83]) {
             this.velocity.y += 3;
             this.verticalFrame = 0;
+            this.direction = Direction.Down;
+
         }
         if (this.game.keysDown[32]) {
-            this.game.debugMode=true;
+            this.game.debugMode = true;
         }
 
         this.prevPosition = new Vector2(this.position.x, this.position.y);
 
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
+        if (!this.collision || this.direction!=this.prevDirection) {
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+            //move boundingbox
+            this.BoundingBox.left += this.velocity.x;
+            this.BoundingBox.right += this.velocity.x;
+            this.BoundingBox.bottom += this.velocity.y;
+            this.BoundingBox.top += this.velocity.y;
+        }
 
         //Check if camera should move
         if (this.game.gameRect.TouchesCameraBorders(new Vector2(this.position.x - this.game.camera.x, this.position.y - this.game.camera.y))) {
@@ -83,9 +103,10 @@ export class GameCharacter extends GameEntity {
 
         this.playerCameraPosition.x = this.position.x - this.game.camera.x;
         this.playerCameraPosition.y = this.position.y - this.game.camera.y;
+        this.collision = false;
     }
 
-    public draw(ctx:CanvasRenderingContext2D) {
+    public draw(ctx: CanvasRenderingContext2D) {
         //var ctx = this.game.context;
 
         //Draw debug
@@ -95,7 +116,7 @@ export class GameCharacter extends GameEntity {
             ctx.fillText(this.position.toString(), this.position.x - this.game.camera.x, this.position.y - this.game.camera.y);
 
             //Draw camera borders
-            ctx.rect(200,200,400+48,350+48);
+            ctx.rect(200, 200, 400 + 48, 350 + 48);
             ctx.strokeStyle = "#ffffff";
             ctx.stroke();
         }

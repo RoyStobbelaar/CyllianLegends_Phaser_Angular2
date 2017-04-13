@@ -33,43 +33,13 @@ export class GameEntity {
 
         this.sprite = new Image();
         this.sprite.src = path;
-        this.BoundingBox = new Rectangle(this.position.x,this.position.y,width,height);
+        this.BoundingBox = new Rectangle(this.position.x, this.position.y, width, height);
     }
 
     public update() {
         //Updates entity;
+    }
 
-        //handle pushed keys
-        // if (this.game.keysDown[37]){
-        //     this.position.x -= 3;
-        //     this.verticalFrame = 1;
-        // }
-        // if (this.game.keysDown[38]){
-        //     this.position.y -= 3;
-        //     this.verticalFrame = 3;
-        // }
-        // if (this.game.keysDown[39]){
-        //     this.position.x += 3;
-        //     this.verticalFrame = 2;
-        // }
-        // if (this.game.keysDown[40]){
-        //     this.position.y += 3;
-        //     this.verticalFrame = 0;
-        // }
-}
-
-    public draw(ctx:CanvasRenderingContext2D) {
-    // var ctx = this.game.context;
-
-    // ctx.drawImage(
-    //     this.sprite,
-    //     this.horizontalFrame * 48,
-    //     this.verticalFrame * 48,
-    //     48,
-    //     48,
-    //     this.position.x - this.game.camera.x,
-    //     this.position.y - this.game.camera.y,
-    //     this.width,
-    //     this.height);
-}
+    public draw(ctx: CanvasRenderingContext2D) {
+    }
 }
