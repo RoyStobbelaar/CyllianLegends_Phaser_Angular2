@@ -1,0 +1,16 @@
+h1{
+    color:white;
+    text-align: center;
+}
+
+.titleBar{
+    /*border: 1px solid #222244;
+    border-radius: 12px;
+    background-color: #111133;
+    padding: 10px;*/
+}
+
+.banner-image{
+    max-width: 1024px;
+    margin-bottom: -36px;
+}
