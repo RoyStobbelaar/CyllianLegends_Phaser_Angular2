@@ -7,6 +7,7 @@ import { Rectangle } from './game-classes/rectangle';
 import { Tile } from './game-classes/tile';
 import { TileMap } from './game-classes/tileMap';
 import { LevelMap } from './game-classes/levelMap';
+import { GameConfig } from './game.config';
 
 @Component({
     selector: 'game',
@@ -39,7 +40,7 @@ export class GameComponent implements AfterViewInit, OnInit {
         this.camera = new Vector2(0, 0);
 
         //Create test character
-        this.Player = new GameCharacter(this, new Vector2(300, 300), "./app/components/game-component/game-images/characters1.png", 48, 48, 0, 0)
+        this.Player = new GameCharacter(this, new Vector2(300, 300), GameConfig.game_image_path+"characters1.png", 48, 48, 0, 0)
 
         //Create test map
         for (let x = 0; x < this.Width; x += 48) {
@@ -52,7 +53,7 @@ export class GameComponent implements AfterViewInit, OnInit {
 
         //Foreach tile position create tile
         this.tile_positions.forEach(tile => {
-            tiles.push(new Tile(this, tile, "./app/components/game-component/game-images/tiles_outside1.png", 48, 48, 0, 0));
+            tiles.push(new Tile(this, tile, GameConfig.game_image_path+"tiles_outside1.png", 48, 48, 0, 0));
         })
 
         //Create tilemap
@@ -61,28 +62,32 @@ export class GameComponent implements AfterViewInit, OnInit {
 
         //Create splattered tilemap
         let splatterTiles: Tile[] = new Array();
-        splatterTiles.push(new Tile(this, new Vector2(100,100), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,0,11));
-        splatterTiles.push(new Tile(this, new Vector2(200,200), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,1,12));
-        splatterTiles.push(new Tile(this, new Vector2(300,300), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,1,13));
-        splatterTiles.push(new Tile(this, new Vector2(400,400), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,0,11));
-        splatterTiles.push(new Tile(this, new Vector2(500,500), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,2,12));
-        splatterTiles.push(new Tile(this, new Vector2(600,600), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,1,13));
-        splatterTiles.push(new Tile(this, new Vector2(700,700), "./app/components/game-component/game-images/tiles_splatter_outside1.png", 48,48,0,11));
+        splatterTiles.push(new Tile(this, new Vector2(100,100), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,0,11));
+        splatterTiles.push(new Tile(this, new Vector2(200,200), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,1,12));
+        splatterTiles.push(new Tile(this, new Vector2(300,300), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,1,13));
+        splatterTiles.push(new Tile(this, new Vector2(400,400), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,0,11));
+        splatterTiles.push(new Tile(this, new Vector2(500,500), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,2,12));
+        splatterTiles.push(new Tile(this, new Vector2(600,600), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,1,13));
+        splatterTiles.push(new Tile(this, new Vector2(700,700), GameConfig.game_image_path+"tiles_splatter_outside1.png", 48,48,0,11));
         
         layers.push(new TileMap("testsplatterlayer", splatterTiles));
 
         //Create collision layer
         let collisionTiles: Tile[] = new Array();
-        collisionTiles.push(new Tile(this, new Vector2(800,100),"./app/components/game-component/game-images/tiles_splatter_outside1.png",48,48,0,13));
-        collisionTiles.push(new Tile(this, new Vector2(700,200),"./app/components/game-component/game-images/tiles_splatter_outside1.png",48,48,0,13));
-        collisionTiles.push(new Tile(this, new Vector2(300,500),"./app/components/game-component/game-images/tiles_splatter_outside1.png",48,48,0,13));
-        collisionTiles.push(new Tile(this, new Vector2(200,600),"./app/components/game-component/game-images/tiles_splatter_outside1.png",48,48,0,13));
-        collisionTiles.push(new Tile(this, new Vector2(100,700),"./app/components/game-component/game-images/tiles_splatter_outside1.png",48,48,0,13));
+        collisionTiles.push(new Tile(this, new Vector2(800,100),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,0,13));
+        collisionTiles.push(new Tile(this, new Vector2(700,200),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,0,13));
+        collisionTiles.push(new Tile(this, new Vector2(300,500),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,0,13));
+        collisionTiles.push(new Tile(this, new Vector2(200,600),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,0,13));
+        collisionTiles.push(new Tile(this, new Vector2(100,700),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,0,13));
         
         layers.push(new TileMap("testcollisionlayer",collisionTiles,true));
 
+        //Create entrance and exit
+        let entranceTile = new Tile(this,new Vector2(400,200),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,2,12,"World");
+        let exitTile = new Tile(this,new Vector2(1000,500),GameConfig.game_image_path+"tiles_splatter_outside1.png",48,48,4,4,"Cellar");
+
         //Create map
-        this.Map = new LevelMap("Level1",layers,this.Player);
+        this.Map = new LevelMap(this,"Level1",layers,this.Player,entranceTile,exitTile);
     }
 
     @HostListener('document:keydown', ['$event'])

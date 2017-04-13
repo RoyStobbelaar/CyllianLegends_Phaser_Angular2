@@ -6,6 +6,9 @@ import { Rectangle } from './rectangle';
 
 export class Tile extends GameEntity{
 
+    //A tile can lead to a new map (a door for example)
+    public leadsTo: string; 
+
         constructor(
         game: GameComponent,
         pos: Vector2,
@@ -13,10 +16,12 @@ export class Tile extends GameEntity{
         width: number,
         height: number,
         hFrame: number,
-        vFrame: number
+        vFrame: number,
+        leadsTo?:string
          ) {
         super(game, pos, path, width, height, hFrame, vFrame);
         this.BoundingBox = new Rectangle(pos.x,pos.y,width,height);
+        this.leadsTo=leadsTo;
     }
 
     public draw(ctx:CanvasRenderingContext2D, collision?:boolean){

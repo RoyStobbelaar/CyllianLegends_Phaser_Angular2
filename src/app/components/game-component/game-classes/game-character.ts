@@ -1,6 +1,7 @@
 import { Vector2 } from './vector2';
 import { GameEntity } from './game-entity';
 import { GameComponent } from './../game.component';
+import { Rectangle } from './rectangle';
 
 enum Direction {
     Left, Right, Up, Down
@@ -130,5 +131,12 @@ export class GameCharacter extends GameEntity {
             this.position.y - this.game.camera.y,
             this.width,
             this.height);
+    }
+
+    public SetPosition(newPosition:Vector2){
+        this.position = newPosition;
+        this.BoundingBox = new Rectangle(this.position.x, this.position.y, this.width, this.height);
+        //Reset camera
+        this.game.camera = new Vector2(this.position.x - 400, this.position.y - 350);
     }
 }
