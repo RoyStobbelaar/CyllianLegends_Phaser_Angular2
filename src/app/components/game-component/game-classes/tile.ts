@@ -3,14 +3,16 @@ import { GameEntity } from './game-entity';
 import { Vector2 } from './vector2';
 import { TileMap } from './tileMap';
 import { Rectangle } from './rectangle';
+import { GameConfig } from './../game.config';
 
 export class Tile extends GameEntity{
 
     //A tile can lead to a new map (a door for example)
     public leadsTo: string; 
+        private camera: Vector2;
+    private gameRect: Rectangle;
 
         constructor(
-        game: GameComponent,
         pos: Vector2,
         path: string,
         width: number,
@@ -19,23 +21,28 @@ export class Tile extends GameEntity{
         vFrame: number,
         leadsTo?:string
          ) {
-        super(game, pos, path, width, height, hFrame, vFrame);
+        super(pos, path, width, height, hFrame, vFrame);
         this.BoundingBox = new Rectangle(pos.x,pos.y,width,height);
         this.leadsTo=leadsTo;
+    }
+
+    public init(camera?: Vector2, gameRect?: Rectangle){
+        this.camera = camera;
+        this.gameRect = gameRect;
     }
 
     public draw(ctx:CanvasRenderingContext2D, collision?:boolean){
         //var ctx = this.game.context;
         //Draw debug
-        if (this.game.debugMode) {
+        if (GameConfig.debugMode) {
             //Draw camera borders
             if(collision){
 
                 ctx.font = "16px Arial";
                 ctx.fillStyle = "#ffffff";
-                ctx.fillText(this.position.toString(), this.position.x - this.game.camera.x, this.position.y - this.game.camera.y);
+                ctx.fillText(this.position.toString(), this.position.x - this.camera.x, this.position.y - this.camera.y);
 
-                ctx.rect(this.position.x - this.game.camera.x,this.position.y - this.game.camera.y,48,48);
+                ctx.rect(this.position.x - this.camera.x,this.position.y - this.camera.y,48,48);
                 ctx.strokeStyle = "#ff00ff";
                 ctx.stroke();
             }
@@ -47,8 +54,8 @@ export class Tile extends GameEntity{
             this.verticalFrame * 48,
             48,
             48,
-            this.position.x - this.game.camera.x,
-            this.position.y - this.game.camera.y,
+            this.position.x - this.camera.x,
+            this.position.y - this.camera.y,
             this.width,
             this.height);
     }
