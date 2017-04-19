@@ -17,8 +17,6 @@ export class GameCharacter extends GameEntity {
     public timer: number = 0;
     public playerCameraPosition: Vector2;
     public collision: boolean;
-    //private camera: Vector2;
-    //private gameRect: Rectangle;
 
     constructor(
         pos: Vector2,
@@ -33,11 +31,6 @@ export class GameCharacter extends GameEntity {
         this.direction = Direction.Down;
         this.velocity = new Vector2(0, 0);
         this.collision = false;
-    }
-
-    public init(camera?: Vector2, gameRect?: Rectangle) {
-        //this.camera = camera;
-        //this.gameRect = gameRect;
     }
 
     public collisionWithCollisionTile(tile: GameEntity) {

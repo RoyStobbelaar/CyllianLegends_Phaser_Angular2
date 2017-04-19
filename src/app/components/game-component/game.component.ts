@@ -39,16 +39,7 @@ export class GameComponent implements AfterViewInit, OnInit {
     }
 
     loadMap() {
-
-        //Create test map
-        for (let x = 0; x < this.Width; x += 48) {
-            for (let y = 0; y < this.Height; y += 48) {
-                this.tile_positions.push(new Vector2(x, y));
-            }
-        }
-
         let tileArray: number[][];
-
         tileArray = [];
         //Create test map pro way
         for(let y = 0; y * 48 < (this.Height * 3); y++){
@@ -57,7 +48,6 @@ export class GameComponent implements AfterViewInit, OnInit {
                 tileArray[y][x] = Math.floor(x/3);
             }
         }
-
         //Create tilemap
         let layers: TileMap[] = new Array();
 
