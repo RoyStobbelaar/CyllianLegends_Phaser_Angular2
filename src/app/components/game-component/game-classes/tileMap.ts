@@ -40,57 +40,23 @@ export class TileMap{
         //     }
         // }
 
-        console.log('draw tiles');
-
             for(let i = 0; i < this.Tiles.length; i++){
                 for(let j = 0; j < this.Tiles[i].length;j++){
 
-                    var tile = this.GetTileFromNumber(this.Tiles[i][j]);
-                    console.log(tile);
+                    //Get y tile
+                    var tileX = Math.floor(this.Tiles[i][j]/16);
+                    //get x get rest
+                    var tileY = this.Tiles[i][j]%12;
 
                     ctx.drawImage(
                         this.spritesheet,
-                        tile[0] * 48, tile[1] * 48, 48, 48,
+                        tileX * 48, tileY * 48, 48, 48,
                         (i * 48) - GameConfig.worldCamera.x,
                         (j * 48) - GameConfig.worldCamera.y,
                         48,48 
                     );
                 }
             }
-
-            // ctx.drawImage(
-            // this.spritesheet,
-            // this.horizontalFrame * 48,
-            // this.verticalFrame * 48,
-            // 48,
-            // 48,
-            // this.position.x - GameConfig.worldCamera.x,
-            // this.position.y - GameConfig.worldCamera.y,
-            // this.width,
-            // this.height);
-
-        // ctx.drawImage(
-        //     this.spritesheet,
-        //     this.horizontalFrame * 48,
-        //     this.verticalFrame * 48,
-        //     48,
-        //     48,
-        //     this.position.x - GameConfig.worldCamera.x,
-        //     this.position.y - GameConfig.worldCamera.y,
-        //     this.width,
-        //     this.height);
-
-    }
-
-    public GetTileFromNumber(tileNumber:number) {
-        let total=0;
-        for(let x = 0; (x*48) <= this.spritesheet.width; x++){
-            for (let y=0; (y*48) <= this.spritesheet.height; y++){
-                total++;
-                if(total == tileNumber)
-                    return [x, y];
-            }
-        }
     }
 
     //Check collision with playerlocation

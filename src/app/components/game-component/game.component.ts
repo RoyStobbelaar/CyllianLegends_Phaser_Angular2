@@ -20,7 +20,7 @@ import 'rxjs/Rx';
 export class GameComponent implements AfterViewInit, OnInit {
 
     public Width: number = 800;
-    public height: number = 700;
+    public Height: number = 700;
     public context: CanvasRenderingContext2D;
     public Map: LevelMap;
     public debugMode: boolean = false;
@@ -42,7 +42,7 @@ export class GameComponent implements AfterViewInit, OnInit {
 
         //Create test map
         for (let x = 0; x < this.Width; x += 48) {
-            for (let y = 0; y < this.height; y += 48) {
+            for (let y = 0; y < this.Height; y += 48) {
                 this.tile_positions.push(new Vector2(x, y));
             }
         }
@@ -51,49 +51,17 @@ export class GameComponent implements AfterViewInit, OnInit {
 
         tileArray = [];
         //Create test map pro way
-        for(let x = 0; x * 48 < this.Width; x++){
-            tileArray[x] = [];
-            for(let y = 0; y * 48 < this.Width; y++){
-                tileArray[x][y] = Math.floor(Math.random()*192);
+        for(let y = 0; y * 48 < (this.Height * 3); y++){
+            tileArray[y] = [];
+            for(let x = 0; x * 48 < (this.Width * 3); x++){
+                tileArray[y][x] = Math.floor(x/3);
             }
         }
 
-        console.log(tileArray);
-
-        //let tiles: Tile[] = new Array();
-
-        //Foreach tile position create tile
-        //this.tile_positions.forEach(tile => {
-        //    tiles.push(new Tile(tile, GameConfig.game_image_path + "tiles_outside1.png", 48, 48, 0, 0));
-        //})
-
         //Create tilemap
         let layers: TileMap[] = new Array();
-        //layers.push(new TileMap("testlayer", tiles));
 
         layers.push(new TileMap("lvl1ground","tiles_outside1.png",tileArray,false));
-
-        //Create splattered tilemap
-        // let splatterTiles: Tile[] = new Array();
-        // splatterTiles.push(new Tile(new Vector2(100, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
-        // splatterTiles.push(new Tile(new Vector2(200, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 12));
-        // splatterTiles.push(new Tile(new Vector2(300, 300), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
-        // splatterTiles.push(new Tile(new Vector2(400, 400), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
-        // splatterTiles.push(new Tile(new Vector2(500, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12));
-        // splatterTiles.push(new Tile(new Vector2(600, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
-        // splatterTiles.push(new Tile(new Vector2(700, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
-
-        //layers.push(new TileMap("testsplatterlayer", splatterTiles));
-
-        //Create collision layer
-        //let collisionTiles: Tile[] = new Array();
-        //collisionTiles.push(new Tile(new Vector2(800, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        //collisionTiles.push(new Tile(new Vector2(700, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        //collisionTiles.push(new Tile(new Vector2(300, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        //collisionTiles.push(new Tile(new Vector2(200, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        //collisionTiles.push(new Tile(new Vector2(100, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-
-        //layers.push(new TileMap("testcollisionlayer", collisionTiles, true));
 
         //Create entrance and exit
         let entranceTile = new Tile(new Vector2(100, 50), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");
@@ -126,7 +94,7 @@ export class GameComponent implements AfterViewInit, OnInit {
 
         //Get player from db
         let data:any;
-
+        if(!GameConfig.testData){
         this.http.get('http://localhost:80/player.service.php')
         .toPromise()
         .then(result => data = result.json())
@@ -135,6 +103,13 @@ export class GameComponent implements AfterViewInit, OnInit {
          GameConfig.game_image_path + "/" + data.image,parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame))
             .then(() => this.loadMap())
             .then(() => this.update());
+        }
+        else{
+            this.Player = new GameCharacter(new Vector2(300,300),
+            GameConfig.game_image_path + "/" + "characters1.png",48,48,0,0);
+            this.loadMap();
+            this.update();
+        }
     }
 
     saveMapToDatabase(){

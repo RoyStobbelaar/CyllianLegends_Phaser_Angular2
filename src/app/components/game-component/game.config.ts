@@ -6,4 +6,5 @@ export class GameConfig{
     public static debugMode = true;
     public static worldCamera: Vector2 = new Vector2(0,0);
     public static worldCameraSize: Rectangle = new Rectangle(200,200,400,300);
+    public static testData = true; //Turn false if you want data from server
 }
