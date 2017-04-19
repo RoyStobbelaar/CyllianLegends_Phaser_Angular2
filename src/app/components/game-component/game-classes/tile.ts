@@ -9,8 +9,8 @@ export class Tile extends GameEntity{
 
     //A tile can lead to a new map (a door for example)
     public leadsTo: string; 
-        private camera: Vector2;
-    private gameRect: Rectangle;
+     //   private camera: Vector2;
+    //private gameRect: Rectangle;
 
         constructor(
         pos: Vector2,
@@ -27,8 +27,8 @@ export class Tile extends GameEntity{
     }
 
     public init(camera?: Vector2, gameRect?: Rectangle){
-        this.camera = camera;
-        this.gameRect = gameRect;
+        //this.camera = camera;
+        //this.gameRect = gameRect;
     }
 
     public draw(ctx:CanvasRenderingContext2D, collision?:boolean){
@@ -40,9 +40,9 @@ export class Tile extends GameEntity{
 
                 ctx.font = "16px Arial";
                 ctx.fillStyle = "#ffffff";
-                ctx.fillText(this.position.toString(), this.position.x - this.camera.x, this.position.y - this.camera.y);
+                ctx.fillText(this.position.toString(), this.position.x - GameConfig.worldCamera.x, this.position.y - GameConfig.worldCamera.y);
 
-                ctx.rect(this.position.x - this.camera.x,this.position.y - this.camera.y,48,48);
+                ctx.rect(this.position.x - GameConfig.worldCamera.x,this.position.y - GameConfig.worldCamera.y,48,48);
                 ctx.strokeStyle = "#ff00ff";
                 ctx.stroke();
             }
@@ -54,8 +54,8 @@ export class Tile extends GameEntity{
             this.verticalFrame * 48,
             48,
             48,
-            this.position.x - this.camera.x,
-            this.position.y - this.camera.y,
+            this.position.x - GameConfig.worldCamera.x,
+            this.position.y - GameConfig.worldCamera.y,
             this.width,
             this.height);
     }

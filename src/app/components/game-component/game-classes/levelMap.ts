@@ -9,7 +9,6 @@ import { GameComponent } from './../game.component';
 //A collection of tilemaps, with identifier and connections to other tilemaps
 export class LevelMap {
 
-    public Game: GameComponent;
     public Layers: TileMap[];
     public Identifier: string;
     public Player: GameCharacter;
@@ -17,8 +16,7 @@ export class LevelMap {
     public Exit: Tile;
     public PlayerStartPosition: Vector2;
 
-    constructor(game: GameComponent, name: string, layers: TileMap[], player: GameCharacter, entrance: Tile, exit: Tile) {
-        this.Game = game;
+    constructor(name: string, layers: TileMap[], player: GameCharacter, entrance: Tile, exit: Tile) {
         this.Layers = layers;
         this.Identifier = name;
         this.Player = player;
@@ -67,7 +65,6 @@ export class LevelMap {
         //Load that map
         console.log(mapName);
 
-
         switch (mapName) {
             case "World":
 
@@ -89,7 +86,7 @@ export class LevelMap {
 
                 //Create tilemap
                 let layers: TileMap[] = new Array();
-                layers.push(new TileMap("testlayer", tiles));
+                //layers.push(new TileMap("testlayer", tiles));
 
                 //Create splattered tilemap
                 let splatterTiles: Tile[] = new Array();
@@ -101,7 +98,7 @@ export class LevelMap {
                 splatterTiles.push(new Tile(new Vector2(600, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 6, 13));
                 splatterTiles.push(new Tile(new Vector2(700, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 7, 11));
 
-                layers.push(new TileMap("testsplatterlayer", splatterTiles));
+                //layers.push(new TileMap("testsplatterlayer", splatterTiles));
 
                 //Create collision layer
                 let collisionTiles: Tile[] = new Array();
@@ -111,7 +108,7 @@ export class LevelMap {
                 collisionTiles.push(new Tile(new Vector2(200, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 8, 13));
                 collisionTiles.push(new Tile(new Vector2(100, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 9, 13));
 
-                layers.push(new TileMap("testcollisionlayer", collisionTiles, true));
+                //layers.push(new TileMap("testcollisionlayer", collisionTiles, true));
 
                 //Create entrance and exit
                 let entranceTile = new Tile(new Vector2(400, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");
@@ -119,9 +116,9 @@ export class LevelMap {
 
                 this.SetNewMap("world", layers, this.Player, entranceTile, exitTile);
 
-                layers.forEach(layer => layer.initTiles(this.Game.camera, this.Game.gameRect));
-                entranceTile.init(this.Game.camera,this.Game.gameRect);
-                exitTile.init(this.Game.camera,this.Game.gameRect);
+                //layers.forEach(layer => layer.initTiles(this.Game.camera, this.Game.gameRect));
+                //entranceTile.init(this.Game.camera,this.Game.gameRect);
+                //exitTile.init(this.Game.camera,this.Game.gameRect);
 
                 break;
             case "Cellar":
@@ -143,7 +140,7 @@ export class LevelMap {
 
                 //Create tilemap
                 let layers2: TileMap[] = new Array();
-                layers2.push(new TileMap("testlayer", tiles2));
+                //layers2.push(new TileMap("testlayer", tiles2));
 
                 //Create splattered tilemap
                 let splatterTiles2: Tile[] = new Array();
@@ -155,7 +152,7 @@ export class LevelMap {
                 splatterTiles2.push(new Tile(new Vector2(600, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 6, 13));
                 splatterTiles2.push(new Tile(new Vector2(700, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 7, 11));
 
-                layers2.push(new TileMap("testsplatterlayer", splatterTiles2));
+                //layers2.push(new TileMap("testsplatterlayer", splatterTiles2));
 
                 //Create collision layer
                 let collisionTiles2: Tile[] = new Array();
@@ -165,15 +162,15 @@ export class LevelMap {
                 collisionTiles2.push(new Tile(new Vector2(200, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 4, 13));
                 collisionTiles2.push(new Tile(new Vector2(100, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 5, 13));
 
-                layers2.push(new TileMap("testcollisionlayer", collisionTiles2, true));
+                //layers2.push(new TileMap("testcollisionlayer", collisionTiles2, true));
 
                 //Create entrance and exit
                 let entranceTile2 = new Tile(new Vector2(400, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 5, 12, "World");
                 let exitTile2 = new Tile(new Vector2(1000, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 7, 4, "Cellar");
 
-                layers2.forEach(layer => layer.initTiles(this.Game.camera, this.Game.gameRect));
-                entranceTile2.init(this.Game.camera,this.Game.gameRect);
-                exitTile2.init(this.Game.camera,this.Game.gameRect);
+                //layers2.forEach(layer => layer.initTiles(this.Game.camera, this.Game.gameRect));
+                //entranceTile2.init(this.Game.camera,this.Game.gameRect);
+                //exitTile2.init(this.Game.camera,this.Game.gameRect);
 
                 this.SetNewMap("Cellar", layers2, this.Player, entranceTile2, exitTile2);
                 break;

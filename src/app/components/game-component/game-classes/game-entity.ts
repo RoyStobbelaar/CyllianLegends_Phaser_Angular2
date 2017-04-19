@@ -1,5 +1,6 @@
 import { Vector2 } from './vector2';
 import { Rectangle } from './rectangle';
+import { GameConfig } from './../game.config';
 
 export class GameEntity {
 
@@ -30,7 +31,7 @@ export class GameEntity {
         this.position = pos;
         this.sprite = new Image();
         this.sprite.src = path;
-        this.BoundingBox = new Rectangle(this.position.x, this.position.y, width, height);
+        this.BoundingBox = new Rectangle(this.position.x, this.position.y, this.width, this.height);
     }
 
     public init(camera?: Vector2, gameRect?: Rectangle) {

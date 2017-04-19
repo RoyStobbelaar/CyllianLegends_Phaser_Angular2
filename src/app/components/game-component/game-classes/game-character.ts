@@ -17,8 +17,8 @@ export class GameCharacter extends GameEntity {
     public timer: number = 0;
     public playerCameraPosition: Vector2;
     public collision: boolean;
-    private camera: Vector2;
-    private gameRect: Rectangle;
+    //private camera: Vector2;
+    //private gameRect: Rectangle;
 
     constructor(
         pos: Vector2,
@@ -36,8 +36,8 @@ export class GameCharacter extends GameEntity {
     }
 
     public init(camera?: Vector2, gameRect?: Rectangle) {
-        this.camera = camera;
-        this.gameRect = gameRect;
+        //this.camera = camera;
+        //this.gameRect = gameRect;
     }
 
     public collisionWithCollisionTile(tile: GameEntity) {
@@ -90,12 +90,9 @@ export class GameCharacter extends GameEntity {
             this.BoundingBox.top += this.velocity.y;
         }
 
-        //Check if camera should move
-        if (this.gameRect.TouchesCameraBorders(new Vector2(this.position.x - this.camera.x, this.position.y - this.camera.y))) {
-            //Move camera
-            console.log('move camera');
-            this.camera.x += this.velocity.x;
-            this.camera.y += this.velocity.y;
+        if(GameConfig.worldCameraSize.TouchesCameraBorders(new Vector2(this.position.x - GameConfig.worldCamera.x, this.position.y - GameConfig.worldCamera.y))){
+            GameConfig.worldCamera.x += this.velocity.x;
+            GameConfig.worldCamera.y += this.velocity.y;
         }
 
         if (this.timer > 10 && !(this.velocity.x == 0 && this.velocity.y == 0)) {
@@ -114,7 +111,7 @@ export class GameCharacter extends GameEntity {
         if (GameConfig.debugMode) {
             ctx.font = "16px Arial";
             ctx.fillStyle = "#ffffff";
-            ctx.fillText(this.position.toString(), this.position.x - this.camera.x, this.position.y - this.camera.y);
+            ctx.fillText(this.position.toString(), this.position.x - GameConfig.worldCamera.x, this.position.y - GameConfig.worldCamera.y);
 
             //Draw camera borders
             ctx.rect(200, 200, 400 + 48, 350 + 48);
@@ -128,8 +125,8 @@ export class GameCharacter extends GameEntity {
             this.verticalFrame * 48,
             48,
             48,
-            this.position.x - this.camera.x,
-            this.position.y - this.camera.y,
+            this.position.x - GameConfig.worldCamera.x,
+            this.position.y - GameConfig.worldCamera.y,
             this.width,
             this.height);
     }
@@ -137,6 +134,7 @@ export class GameCharacter extends GameEntity {
     public SetPosition(newPosition: Vector2) {
         this.position = newPosition;
         this.BoundingBox = new Rectangle(this.position.x, this.position.y, this.width, this.height);
-        //this.camera = new Vector2(this.position.x - 400, this.position.y - 350);
+        GameConfig.worldCamera.x = this.position.x - 400;
+        GameConfig.worldCamera.y = this.position.y - 350;
     }
 }

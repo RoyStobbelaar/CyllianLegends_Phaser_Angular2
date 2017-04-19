@@ -23,14 +23,11 @@ export class GameComponent implements AfterViewInit, OnInit {
     public height: number = 700;
     public context: CanvasRenderingContext2D;
     public Map: LevelMap;
-    public gameRect: Rectangle;
-    public camera: Vector2;
     public debugMode: boolean = false;
     public Player: GameCharacter;
     public IsLoading: boolean = true;
 
     public keysDown: boolean[] = new Array();
-
 
     private tile_positions: Vector2[] = new Array();
 
@@ -39,14 +36,9 @@ export class GameComponent implements AfterViewInit, OnInit {
     constructor(private http: Http) { }
 
     ngOnInit() {
-        this.gameRect = new Rectangle(200, 200, 400, 350);
-        this.camera = new Vector2(0, 0);
-        this.Player;
     }
 
     loadMap() {
-
-        console.log(this);
 
         //Create test map
         for (let x = 0; x < this.Width; x += 48) {
@@ -55,51 +47,63 @@ export class GameComponent implements AfterViewInit, OnInit {
             }
         }
 
-        let tiles: Tile[] = new Array();
+        let tileArray: number[][];
+
+        tileArray = [];
+        //Create test map pro way
+        for(let x = 0; x * 48 < this.Width; x++){
+            tileArray[x] = [];
+            for(let y = 0; y * 48 < this.Width; y++){
+                tileArray[x][y] = Math.floor(Math.random()*192);
+            }
+        }
+
+        console.log(tileArray);
+
+        //let tiles: Tile[] = new Array();
 
         //Foreach tile position create tile
-        this.tile_positions.forEach(tile => {
-            tiles.push(new Tile(tile, GameConfig.game_image_path + "tiles_outside1.png", 48, 48, 0, 0));
-        })
+        //this.tile_positions.forEach(tile => {
+        //    tiles.push(new Tile(tile, GameConfig.game_image_path + "tiles_outside1.png", 48, 48, 0, 0));
+        //})
 
         //Create tilemap
         let layers: TileMap[] = new Array();
-        layers.push(new TileMap("testlayer", tiles));
+        //layers.push(new TileMap("testlayer", tiles));
+
+        layers.push(new TileMap("lvl1ground","tiles_outside1.png",tileArray,false));
 
         //Create splattered tilemap
-        let splatterTiles: Tile[] = new Array();
-        splatterTiles.push(new Tile(new Vector2(100, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
-        splatterTiles.push(new Tile(new Vector2(200, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 12));
-        splatterTiles.push(new Tile(new Vector2(300, 300), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
-        splatterTiles.push(new Tile(new Vector2(400, 400), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
-        splatterTiles.push(new Tile(new Vector2(500, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12));
-        splatterTiles.push(new Tile(new Vector2(600, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
-        splatterTiles.push(new Tile(new Vector2(700, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
+        // let splatterTiles: Tile[] = new Array();
+        // splatterTiles.push(new Tile(new Vector2(100, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
+        // splatterTiles.push(new Tile(new Vector2(200, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 12));
+        // splatterTiles.push(new Tile(new Vector2(300, 300), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
+        // splatterTiles.push(new Tile(new Vector2(400, 400), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
+        // splatterTiles.push(new Tile(new Vector2(500, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12));
+        // splatterTiles.push(new Tile(new Vector2(600, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 1, 13));
+        // splatterTiles.push(new Tile(new Vector2(700, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 11));
 
-        layers.push(new TileMap("testsplatterlayer", splatterTiles));
+        //layers.push(new TileMap("testsplatterlayer", splatterTiles));
 
         //Create collision layer
-        let collisionTiles: Tile[] = new Array();
-        collisionTiles.push(new Tile(new Vector2(800, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        collisionTiles.push(new Tile(new Vector2(700, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        collisionTiles.push(new Tile(new Vector2(300, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        collisionTiles.push(new Tile(new Vector2(200, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
-        collisionTiles.push(new Tile(new Vector2(100, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
+        //let collisionTiles: Tile[] = new Array();
+        //collisionTiles.push(new Tile(new Vector2(800, 100), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
+        //collisionTiles.push(new Tile(new Vector2(700, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
+        //collisionTiles.push(new Tile(new Vector2(300, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
+        //collisionTiles.push(new Tile(new Vector2(200, 600), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
+        //collisionTiles.push(new Tile(new Vector2(100, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 0, 13));
 
-        layers.push(new TileMap("testcollisionlayer", collisionTiles, true));
+        //layers.push(new TileMap("testcollisionlayer", collisionTiles, true));
 
         //Create entrance and exit
-        let entranceTile = new Tile(new Vector2(400, 200), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");
-        let exitTile = new Tile(new Vector2(1000, 500), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 4, 4, "Cellar");
+        let entranceTile = new Tile(new Vector2(100, 50), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");
+        let exitTile = new Tile(new Vector2(1000, 700), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 4, 4, "Cellar");
 
-        layers.forEach(layer => layer.initTiles(this.camera,this.gameRect));
-        entranceTile.init(this.camera,this.gameRect);
-        exitTile.init(this.camera,this.gameRect);
+        this.Map = new LevelMap("Level1", layers, this.Player, entranceTile, exitTile);
 
-        this.Map = new LevelMap(this, "Level1", layers, this.Player, entranceTile, exitTile);
-
-        console.log("MapLoading = done");
         this.IsLoading = false;
+
+        //this.saveMapToDatabase();
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -128,10 +132,33 @@ export class GameComponent implements AfterViewInit, OnInit {
         .then(result => data = result.json())
         .then(()=> this.Player = 
         new GameCharacter(new Vector2(data.positionX,data.positionY),
-         GameConfig.game_image_path + "/" + data.image,data.width, data.height, data.horizontalFrame, data.verticalFrame))
-            .then(() => this.Player.init(this.camera,this.gameRect))
+         GameConfig.game_image_path + "/" + data.image,parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame))
             .then(() => this.loadMap())
             .then(() => this.update());
+    }
+
+    saveMapToDatabase(){
+
+        let newHeaders = new Headers();
+        newHeaders.append('Access-Control-Allow-Origin', '*');
+        newHeaders.append('Access-Control-Allow-Headers',' Origin, X-Requested-With, Content-Type, Accept');
+        newHeaders.append('Access-Control-Allow-Methods','GET, POST, PUT');
+
+        // this.http.post('http://localhost:80/level.service.php', {
+        //     'name':this.Map.Identifier, 
+        //     'entrance':this.Map.Entrance,
+        //     'exit':this.Map.Exit,
+        //     'layers': this.Map.Layers,
+
+        var postBody: any = {};
+        postBody.name = JSON.stringify(this.Map.Identifier);
+        postBody.entrance = JSON.stringify(this.Map.Entrance);
+        postBody.exit = JSON.stringify(this.Map.Exit);
+        postBody.layers = JSON.stringify(this.Map.Layers);
+
+        this.http.post('http://localhost:80/level.service.php', postBody,
+            {headers: newHeaders})
+        .toPromise().then(() => console.log("saved"));
     }
 
     update() {
