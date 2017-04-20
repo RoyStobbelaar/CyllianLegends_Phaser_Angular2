@@ -40,18 +40,45 @@ export class GameComponent implements AfterViewInit, OnInit {
 
     loadMap() {
         let tileArray: number[][];
+        let collisionArray:number[][];
         tileArray = [];
+        collisionArray = [];
         //Create test map pro way
         for(let y = 0; y * 48 < (this.Height * 3); y++){
             tileArray[y] = [];
+            collisionArray[y] = [];
             for(let x = 0; x * 48 < (this.Width * 3); x++){
                 tileArray[y][x] = Math.floor(x/3);
             }
         }
+
+        collisionArray[8][0] = 132;
+        collisionArray[8][1] = 133;
+        collisionArray[9][0] = 144;
+        collisionArray[9][1] = 145;
+
+        collisionArray[10][10] = 132;
+        collisionArray[10][11] = 133;
+        collisionArray[11][10] = 144;
+        collisionArray[11][11] = 145;
+
+        collisionArray[0][9] = 132;
+        collisionArray[0][10] = 133;
+        collisionArray[1][9] = 144;
+        collisionArray[1][10] = 145;
+
+        collisionArray[4][4] = 132;
+        collisionArray[4][5] = 133;
+        collisionArray[5][4] = 144;
+        collisionArray[5][5] = 145;
+
+        console.log(collisionArray);
+
         //Create tilemap
         let layers: TileMap[] = new Array();
 
         layers.push(new TileMap("lvl1ground","tiles_outside1.png",tileArray,false));
+        layers.push(new TileMap("lvl1collision","tiles_splatter_outside1.png",collisionArray,true));
 
         //Create entrance and exit
         let entranceTile = new Tile(new Vector2(100, 50), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");

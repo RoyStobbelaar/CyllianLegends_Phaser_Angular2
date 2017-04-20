@@ -28,7 +28,7 @@ export class TileMap {
 
                 var tileX = Math.floor(this.Tiles[i][j] / 16);
                 var tileY = this.Tiles[i][j] % 12;
-
+                
                 ctx.drawImage(
                     this.spritesheet,
                     tileX * 48, tileY * 48, 48, 48,
@@ -37,12 +37,13 @@ export class TileMap {
                     48, 48
                 );
 
-                if (GameConfig.debugMode && this.Collision) {
+                if (GameConfig.debugMode && this.Collision && this.Tiles[i][j]!=null) {
                     ctx.font = "16px Arial";
                     ctx.fillStyle = "#ffffff";
                     ctx.fillText((i * 48).toString() + " - " + (j * 48).toString(), (i * 48) - GameConfig.worldCamera.x, (j * 48) - GameConfig.worldCamera.y);
 
                     ctx.rect((i * 48) - GameConfig.worldCamera.x, (j * 48) - GameConfig.worldCamera.y, 48, 48);
+                    
                     ctx.strokeStyle = "#ff00ff";
                     ctx.stroke();
                 }
@@ -53,13 +54,16 @@ export class TileMap {
     //Check collision with playerlocation
     public checkCollision(player: GameCharacter) {
 
-        // this.Tiles.forEach( (tile) => {
-        //     if(Rectangle.Intersect(tile.BoundingBox,player.BoundingBox)){
-        //         //Collision detected
-        //         player.collisionWithCollisionTile(tile);
-        //         console.log('collision with player');
-        //     }
-        // })
+        for (let i = 0; i < this.Tiles.length; i++) {
+            for (let j = 0; j < this.Tiles[i].length; j++) {
 
+                let rect = new Rectangle((i * 48),(j * 48),48,48);
+
+                if(this.Tiles[i][j] != null && Rectangle.Intersect(rect,player.BoundingBox)){
+                    console.log('Collision with player at : {0} - {1}',i*48,j*48);
+                    player.position = player.prevPosition;
+                }
+            }
+        }
     }
 }

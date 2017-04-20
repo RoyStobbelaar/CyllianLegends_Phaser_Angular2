@@ -26,11 +26,6 @@ export class Tile extends GameEntity{
         this.leadsTo=leadsTo;
     }
 
-    public init(camera?: Vector2, gameRect?: Rectangle){
-        //this.camera = camera;
-        //this.gameRect = gameRect;
-    }
-
     public draw(ctx:CanvasRenderingContext2D, collision?:boolean){
         //var ctx = this.game.context;
         //Draw debug

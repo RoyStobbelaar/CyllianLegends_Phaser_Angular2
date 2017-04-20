@@ -33,9 +33,7 @@ export class GameCharacter extends GameEntity {
         this.collision = false;
     }
 
-    public collisionWithCollisionTile(tile: GameEntity) {
-        //Collision with tile, return to previous location
-        //this.position = this.prevPosition;
+    public collisionWithCollisionTile() {
         console.log('collide');
         this.collision = true;
         this.prevDirection = this.direction;
