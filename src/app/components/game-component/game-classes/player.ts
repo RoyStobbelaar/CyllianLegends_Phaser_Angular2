@@ -4,6 +4,7 @@ import { GameComponent } from './../game.component';
 import { Rectangle } from './rectangle';
 import { GameConfig } from './../game.config';
 import { GameCharacter } from './game-character';
+import { ValuePair } from './valuePair';
 
 enum Direction {
     Left, Right, Up, Down
@@ -19,6 +20,8 @@ export class Player extends GameCharacter {
     public collision: boolean;
     public portrait: HTMLImageElement;
     public battleSprite: HTMLImageElement;
+    public health: ValuePair;
+    public mana: ValuePair;
 
     constructor(
         pos: Vector2,
@@ -34,6 +37,9 @@ export class Player extends GameCharacter {
         this.portrait = new Image();
         this.portrait.src = GameConfig.game_image_path + "/" + portrait;
         this.battleSprite = new Image();
+
+        this.health = new ValuePair(60);
+        this.mana = new ValuePair(20);
     }
 
     public collisionWithCollisionTile() {

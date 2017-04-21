@@ -11,6 +11,7 @@ import { TileMap } from './game-classes/tileMap';
 import { LevelMap } from './game-classes/levelMap';
 import { GameConfig } from './game.config';
 import { Http, Headers } from '@angular/http';
+import { GameNav } from './game-nav/game-nav.component';
 import 'rxjs/Rx';
 
 @Component({
@@ -28,7 +29,16 @@ export class GameComponent implements AfterViewInit, OnInit {
     public debugMode: boolean = false;
     public Party: Party;
     public Player: Player;
+
     public IsLoading: boolean = true;
+    public IsStarted: boolean = false;
+    private loadingImage:HTMLImageElement;
+
+    private fps: number = 80;
+    private now = Date.now();
+    private then = Date.now();
+    private interval = 1000 / this.fps;
+    private delta: number;
 
     public keysDown: boolean[] = new Array();
 
@@ -39,20 +49,22 @@ export class GameComponent implements AfterViewInit, OnInit {
     constructor(private http: Http) { }
 
     ngOnInit() {
+        this.loadingImage = new Image();
+        this.loadingImage.src = GameConfig.game_image_path + "loading.png";
         this.Party = new Party();
     }
 
     loadMap() {
         let tileArray: number[][];
-        let collisionArray:number[][];
+        let collisionArray: number[][];
         tileArray = [];
         collisionArray = [];
         //Create test map pro way
-        for(let y = 0; y * 48 < (this.Height * 3); y++){
+        for (let y = 0; y * 48 < (this.Height * 3); y++) {
             tileArray[y] = [];
             collisionArray[y] = [];
-            for(let x = 0; x * 48 < (this.Width * 3); x++){
-                tileArray[y][x] = Math.floor(x/3);
+            for (let x = 0; x * 48 < (this.Width * 3); x++) {
+                tileArray[y][x] = Math.floor(x / 3);
             }
         }
 
@@ -81,8 +93,8 @@ export class GameComponent implements AfterViewInit, OnInit {
         //Create tilemap
         let layers: TileMap[] = new Array();
 
-        layers.push(new TileMap("lvl1ground","tiles_outside1.png",tileArray,false));
-        layers.push(new TileMap("lvl1collision","tiles_splatter_outside1.png",collisionArray,true));
+        layers.push(new TileMap("lvl1ground", "tiles_outside1.png", tileArray, false));
+        layers.push(new TileMap("lvl1collision", "tiles_splatter_outside1.png", collisionArray, true));
 
         //Create entrance and exit
         let entranceTile = new Tile(new Vector2(100, 50), GameConfig.game_image_path + "tiles_splatter_outside1.png", 48, 48, 2, 12, "World");
@@ -100,7 +112,8 @@ export class GameComponent implements AfterViewInit, OnInit {
         this.keysDown[event.keyCode || event.which] = true;
 
         if (event.keyCode == 32) {
-            GameConfig.debugMode != GameConfig.debugMode;
+            console.log('start game');
+            this.IsStarted = true;
         }
     }
     @HostListener('document:keyup', ['$event'])
@@ -114,36 +127,39 @@ export class GameComponent implements AfterViewInit, OnInit {
         this.context = canvas.getContext("2d");
 
         //Get player from db
-        let data:any;
-        if(!GameConfig.testData){
-        this.http.get('http://localhost:80/player.service.php')
-        .toPromise()
-        .then(result => data = result.json())
-        .then(()=> {this.Player = 
-        new Player(new Vector2(data.positionX,data.positionY),
-         GameConfig.game_image_path + "/" + data.image,
-         GameConfig.game_image_path + "/" + "portrait1.png"
-         ,parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame); this.Party.addPlayer(this.Player)})
-            .then(() => this.loadMap())
-            .then(() => this.update());
+        let data: any;
+        if (!GameConfig.testData) {
+            this.http.get('http://localhost:80/player.service.php')
+                .toPromise()
+                .then(result => data = result.json())
+                .then(() => {
+                this.Player =
+                    new Player(new Vector2(data.positionX, data.positionY),
+                        GameConfig.game_image_path + "/" + data.image,
+                        GameConfig.game_image_path + "/" + "portrait1.png"
+                        , parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame); this.Party.addPlayer(this.Player)
+                })
+                .then(() => this.loadMap())
+                .then(() => this.update());
         }
-        else{
-            this.Player = new Player(new Vector2(300,300),
-            GameConfig.game_image_path + "/" + "characters1.png", 
-            "portrait1.png",48,48,0,0);
+        else {
+            this.Player = new Player(new Vector2(300, 300),
+                GameConfig.game_image_path + "/" + "characters1.png",
+                "portrait1.png", 48, 48, 0, 0);
+            let Player2 = new Player(new Vector2(0,0),"","portrait2.png",48,48,0,0);
             this.Party.addPlayer(this.Player);
-            this.Party.addPlayer(this.Player);
+            this.Party.addPlayer(Player2);
             this.loadMap();
             this.update();
         }
     }
 
-    saveMapToDatabase(){
+    saveMapToDatabase() {
 
         let newHeaders = new Headers();
         newHeaders.append('Access-Control-Allow-Origin', '*');
-        newHeaders.append('Access-Control-Allow-Headers',' Origin, X-Requested-With, Content-Type, Accept');
-        newHeaders.append('Access-Control-Allow-Methods','GET, POST, PUT');
+        newHeaders.append('Access-Control-Allow-Headers', ' Origin, X-Requested-With, Content-Type, Accept');
+        newHeaders.append('Access-Control-Allow-Methods', 'GET, POST, PUT');
 
         // this.http.post('http://localhost:80/level.service.php', {
         //     'name':this.Map.Identifier, 
@@ -158,39 +174,43 @@ export class GameComponent implements AfterViewInit, OnInit {
         postBody.layers = JSON.stringify(this.Map.Layers);
 
         this.http.post('http://localhost:80/level.service.php', postBody,
-            {headers: newHeaders})
-        .toPromise().then(() => console.log("saved"));
+            { headers: newHeaders })
+            .toPromise().then(() => console.log("saved"));
     }
 
     update() {
         requestAnimationFrame(() => {
             this.update();
         });
-        if(!this.IsLoading){
-            //Clear screen
-           this.context.clearRect(0, 0, 800, 700);
+        if (this.IsStarted) {
 
-            this.context.beginPath();
+            this.now = Date.now();
+            this.delta = this.now - this.then;
 
-            this.context.fillStyle = "#ffffff";
+            if (this.delta > this.interval) {
+                //Clear screen
+                this.context.clearRect(0, 0, 800, 700);
+                this.context.beginPath();
+                this.context.fillStyle = "#ffffff";
 
-            //Update game elements
-            this.Map.update();
-            this.Player.update(this.keysDown);
+                //Update game elements
+                this.Map.update();
+                this.Player.update(this.keysDown);
 
-            //Draw tiles
-            this.Map.draw(this.context);
-            this.Player.draw(this.context);
-            this.Party.draw(this.context);
+                //Draw tiles
+                this.Map.draw(this.context);
+                this.Player.draw(this.context);
+                this.Party.draw(this.context);
 
-            this.context.closePath();
+                this.context.closePath();
+
+                this.then = this.now - (this.delta % this.interval);
+            }
         }
-        else{
-               this.context.fillStyle = 'blue';
-               this.context.clearRect(0,0,800,700);
-               let loadingImage = new Image();
-               loadingImage.src="./game-images/loading.png";
-               this.context.drawImage(loadingImage,0,0,600,800,0,0,600,800);
-        }
+                    else {
+                this.context.fillStyle = 'blue';
+                this.context.clearRect(0, 0, 800, 700);
+                this.context.drawImage(this.loadingImage, 0, 0, 600, 800, 100, 0, 600, 800);
+            }
     }
 }
