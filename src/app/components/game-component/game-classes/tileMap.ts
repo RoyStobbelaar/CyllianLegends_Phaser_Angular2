@@ -61,7 +61,7 @@ export class TileMap {
 
                 if(this.Tiles[i][j] != null && Rectangle.Intersect(rect,player.BoundingBox)){
                     console.log('Collision with player at : {0} - {1}',i*48,j*48);
-                    player.position = player.prevPosition;
+                    player.collisionWithCollisionTile();
                 }
             }
         }

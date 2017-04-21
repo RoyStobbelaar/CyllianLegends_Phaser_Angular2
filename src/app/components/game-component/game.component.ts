@@ -2,6 +2,8 @@ import { Component, AfterViewInit, ViewChild, OnInit, HostListener, ElementRef }
 import { Renderer2 } from '@angular/core';
 import { GameEntity } from './game-classes/game-entity';
 import { GameCharacter } from './game-classes/game-character';
+import { Player } from './game-classes/player';
+import { Party } from './game-classes/party';
 import { Vector2 } from './game-classes/vector2';
 import { Rectangle } from './game-classes/rectangle';
 import { Tile } from './game-classes/tile';
@@ -24,7 +26,8 @@ export class GameComponent implements AfterViewInit, OnInit {
     public context: CanvasRenderingContext2D;
     public Map: LevelMap;
     public debugMode: boolean = false;
-    public Player: GameCharacter;
+    public Party: Party;
+    public Player: Player;
     public IsLoading: boolean = true;
 
     public keysDown: boolean[] = new Array();
@@ -36,6 +39,7 @@ export class GameComponent implements AfterViewInit, OnInit {
     constructor(private http: Http) { }
 
     ngOnInit() {
+        this.Party = new Party();
     }
 
     loadMap() {
@@ -115,15 +119,20 @@ export class GameComponent implements AfterViewInit, OnInit {
         this.http.get('http://localhost:80/player.service.php')
         .toPromise()
         .then(result => data = result.json())
-        .then(()=> this.Player = 
-        new GameCharacter(new Vector2(data.positionX,data.positionY),
-         GameConfig.game_image_path + "/" + data.image,parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame))
+        .then(()=> {this.Player = 
+        new Player(new Vector2(data.positionX,data.positionY),
+         GameConfig.game_image_path + "/" + data.image,
+         GameConfig.game_image_path + "/" + "portrait1.png"
+         ,parseInt(data.width), parseInt(data.height), data.horizontalFrame, data.verticalFrame); this.Party.addPlayer(this.Player)})
             .then(() => this.loadMap())
             .then(() => this.update());
         }
         else{
-            this.Player = new GameCharacter(new Vector2(300,300),
-            GameConfig.game_image_path + "/" + "characters1.png",48,48,0,0);
+            this.Player = new Player(new Vector2(300,300),
+            GameConfig.game_image_path + "/" + "characters1.png", 
+            "portrait1.png",48,48,0,0);
+            this.Party.addPlayer(this.Player);
+            this.Party.addPlayer(this.Player);
             this.loadMap();
             this.update();
         }
@@ -172,6 +181,7 @@ export class GameComponent implements AfterViewInit, OnInit {
             //Draw tiles
             this.Map.draw(this.context);
             this.Player.draw(this.context);
+            this.Party.draw(this.context);
 
             this.context.closePath();
         }
