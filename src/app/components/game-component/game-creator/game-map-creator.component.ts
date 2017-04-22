@@ -24,15 +24,19 @@ import 'rxjs/Rx';
 export class GameMapCreatorComponent implements OnInit, AfterViewInit {
     
     public context: CanvasRenderingContext2D;
+    public tileContext: CanvasRenderingContext2D;
 
     //Map info
     public mapName: string;
     public layers: TileMap[];
     public selectedLayer: TileMap;
+    public selectedTile: any;
     public spritesheets: string[];
     public selectedSpritesheet: string;
+    public tileMapCoords: HTMLCanvasElement;
 
     @ViewChild("mapCanvas") Canvas: ElementRef;
+    @ViewChild("tileCanvas") TileCanvas: ElementRef;
 
     constructor(private http: Http) { 
 
@@ -41,6 +45,7 @@ export class GameMapCreatorComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.layers = new Array();
         this.spritesheets = new Array();
+        this.selectedTile = new Image();
 
         //Load spritesheets
         this.spritesheets.push("tiles_outside1.png");
@@ -51,7 +56,28 @@ export class GameMapCreatorComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         let canvas = this.Canvas.nativeElement;
         this.context = canvas.getContext("2d");
+
+        let tileCanvas = this.TileCanvas.nativeElement;
+        this.tileContext = tileCanvas.getContext("2d");
+
         this.update();
+    }
+
+    canvasClicked(event:MouseEvent){
+        console.log(event.layerX + " - " + event.layerY);
+    }
+
+    spritesheetClicked(event:MouseEvent){
+        let x = Math.floor(event.layerX/48);
+        let y = Math.floor(event.layerY/48);
+        console.log("selected tile: "+x+"-"+y);
+        this.selectedTile.src = this.selectedSpritesheet;
+
+        this.tileContext.clearRect(0, 0, 50, 50);
+        this.tileContext.drawImage(
+            this.selectedTile,
+            x*48,y*48,48,48,0,0,50,50
+            );
     }
 
     onChangeSpritesheet(newSheet:string){

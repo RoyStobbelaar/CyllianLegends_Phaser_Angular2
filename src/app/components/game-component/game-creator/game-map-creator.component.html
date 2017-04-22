@@ -6,20 +6,21 @@
 
 <!-- The map canvas -->
 <div class="game-canvas">
-    <canvas #mapCanvas width=1000 height=1000></canvas>
+    <canvas #mapCanvas width=1000 height=1000 (click)="canvasClicked($event)"></canvas>
 </div>
 
 <!-- Sidebar with options -->
 <div class="creator-options">
+    <canvas style="float:right" #tileCanvas height=50 width=50></canvas>
     Mapname<br>
-    <input type='text' [(ngModel)]="mapName" placeholder="name">
+    <input type='text' [(ngModel)]="mapName" placeholder="name"><br>
     Selected Spritesheet<br>
-    <!--<select [(ngModel)]="selectedSpritesheet" (ngModelChange)="onChangeSpritesheet($event)")>
+    <select [(ngModel)]="selectedSpritesheet" (ngModelChange)="onChangeSpritesheet($event)">
         <option *ngFor="let spritesheet of spritesheets" [ngValue]="spritesheet">{{spritesheet}}</option>
-    </select>-->
-</div>
-
-<!-- Current spritesheet -->
-<div class="spritesheet">
-    <img src={{selectedSpritesheet}}>
+    </select><br>
+    Collision<br>
+    <!--<ion-checkbox ng-checked="true"></ion-checkbox>-->
+    <div class="selectedSpritesheet">
+        <img src={{selectedSpritesheet}} (click)="spritesheetClicked($event)">
+    </div>
 </div>
