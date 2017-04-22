@@ -24,7 +24,5 @@ export class Party{
             index++;
             //Draw stats or something
         })
-
-        
     }
 }
