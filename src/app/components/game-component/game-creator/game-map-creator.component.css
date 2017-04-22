@@ -1,0 +1,16 @@
+.game-canvas{
+    max-width:700px;
+    max-height:700px;
+    display: inline-grid;
+    overflow:scroll;
+}
+
+.creator-options{
+    width:250px;
+    padding: 10px;
+    margin: 5px;
+    float: right;
+    color:white;
+    border: 1px solid white;
+    border-radius: 12px;
+}

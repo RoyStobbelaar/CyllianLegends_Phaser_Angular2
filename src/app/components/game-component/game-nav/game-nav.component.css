@@ -1,35 +1,7 @@
-.game-canvas{
-    border: 1px solid black;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 12px;
-    background-color: #111111;
-    max-width: 800px;
-    max-height: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.row{
-    margin-right: auto;
-    margin-left: auto;
-    text-align: center;
-}
-
-.row-button{
-    background-color:#000055;
-    color:white;
-    min-height: 24px;
-    min-width: 48px;
-    border-radius: 12px;
-    box-shadow: 2px 2px 2px 2px #111111;
-}
-
 .navbar{
     background-color: #112233;
     width: 100%;
     text-align: center;
-    margin-top: -20px;
 }
 
 ul {

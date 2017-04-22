@@ -1,0 +1,25 @@
+<game-nav></game-nav>
+
+<h2>
+    Create map here
+</h2>
+
+<!-- The map canvas -->
+<div class="game-canvas">
+    <canvas #mapCanvas width=1000 height=1000></canvas>
+</div>
+
+<!-- Sidebar with options -->
+<div class="creator-options">
+    Mapname<br>
+    <input type='text' [(ngModel)]="mapName" placeholder="name">
+    Selected Spritesheet<br>
+    <!--<select [(ngModel)]="selectedSpritesheet" (ngModelChange)="onChangeSpritesheet($event)")>
+        <option *ngFor="let spritesheet of spritesheets" [ngValue]="spritesheet">{{spritesheet}}</option>
+    </select>-->
+</div>
+
+<!-- Current spritesheet -->
+<div class="spritesheet">
+    <img src={{selectedSpritesheet}}>
+</div>
